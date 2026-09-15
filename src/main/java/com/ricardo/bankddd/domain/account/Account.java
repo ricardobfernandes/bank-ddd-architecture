@@ -1,0 +1,157 @@
+package com.ricardo.bankddd.domain.account;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import com.ricardo.bankddd.domain.exceptions.InvalidAmountException;
+import com.ricardo.bankddd.domain.transaction.Transaction;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tb_accounts")
+public class Account implements Serializable {
+	private static final long serialVersionUID = 1;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private Integer agencyNumber;
+	private Integer accountNumber;
+
+	@Enumerated(EnumType.STRING)
+	private AccountType accountType;
+	private Double balance;
+	private Double creditLimit;
+	private Double interestRate;
+
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL) // tem que reavaliar
+	private List<Transaction> transactions = new ArrayList<>(); // tem que reavaliar
+
+	public Account() {
+	}
+
+	public Account(Long id, Integer agencyNumber, Integer accountNumber, AccountType accountType, Double balance,
+			Double creditLimit, Double interestRate) {
+		super();
+		this.id = id;
+		this.agencyNumber = agencyNumber;
+		this.accountNumber = accountNumber;
+		this.accountType = accountType;
+		this.balance = balance;
+		this.creditLimit = creditLimit;
+		this.interestRate = interestRate;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Integer getAgencyNumber() {
+		return agencyNumber;
+	}
+
+	public void setAgencyNumber(Integer agencyNumber) {
+		this.agencyNumber = agencyNumber;
+	}
+
+	public Integer getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(Integer accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public AccountType getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(AccountType accountType) {
+		this.accountType = accountType;
+	}
+
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	public Double getCreditLimit() {
+		return creditLimit;
+	}
+
+	public void setCreditLimit(Double creditLimit) {
+		this.creditLimit = creditLimit;
+	}
+
+	public Double getInterestRate() {
+		return interestRate;
+	}
+
+	public void setInterestRate(Double interestRate) {
+		this.interestRate = interestRate;
+	}
+
+	public void withdraw(double amount) {
+		if (amount <= 0) {
+			throw new InvalidAmountException("Withdrawal amount must be greater than zero.");
+		}
+		balance -= amount;
+	}
+
+	public void deposit(double amount) {
+		if (amount <= 0) {
+			throw new InvalidAmountException("Withdrawal amount must be greater than zero.");
+		}
+		balance += amount;
+	}
+
+	public void applyInterestRate() {
+		balance += balance * interestRate;
+	}
+
+	public void addTransaction(String type, Double amount) {
+		Transaction transaction = new Transaction(type, amount, this);
+		transactions.add(transaction);
+	}
+
+	public List<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Account other = (Account) obj;
+		return Objects.equals(id, other.id);
+	}
+
+}
