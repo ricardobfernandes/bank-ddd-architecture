@@ -2,9 +2,12 @@ package com.ricardo.bankddd.domain.customer;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ricardo.bankddd.domain.account.Account;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -13,6 +16,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -32,6 +36,9 @@ public class Customer implements Serializable{
     
 	@Enumerated(EnumType.STRING)
 	private CustomerGender customerGender;
+	
+	@OneToMany(mappedBy = "customer")
+	private List<Account> accounts = new ArrayList<>();
 	
 	@Embedded
 	private Address address;
@@ -101,6 +108,10 @@ public class Customer implements Serializable{
 
 	public void setCustomerGender(CustomerGender customerGender) {
 		this.customerGender = customerGender;
+	}
+	
+	public List<Account> getAccounts() {
+	    return accounts;
 	}
 	
 	public void changeAddress(Address newAddress) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.ricardo.bankddd.domain.customer.Customer;
 import com.ricardo.bankddd.domain.exceptions.InvalidAmountException;
 import com.ricardo.bankddd.domain.transaction.Transaction;
 
@@ -14,6 +15,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -35,6 +38,10 @@ public class Account implements Serializable {
 	private Double balance;
 	private Double creditLimit;
 	private Double interestRate;
+	
+	@ManyToOne
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL) // tem que reavaliar
 	private List<Transaction> transactions = new ArrayList<>(); // tem que reavaliar
@@ -126,6 +133,14 @@ public class Account implements Serializable {
 
 	public void applyInterestRate() {
 		balance += balance * interestRate;
+	}
+	
+	public Customer getCustomer() {
+	    return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+	    this.customer = customer;
 	}
 
 	public void addTransaction(String type, Double amount) {
