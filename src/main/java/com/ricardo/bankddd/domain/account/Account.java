@@ -49,16 +49,13 @@ public class Account implements Serializable {
 	public Account() {
 	}
 
-	public Account(Long id, Integer agencyNumber, Integer accountNumber, AccountType accountType, Double balance,
-			Double creditLimit, Double interestRate) {
+	public Account(Long id, Integer agencyNumber, Integer accountNumber, AccountType accountType, Double balance) {
 		super();
 		this.id = id;
 		this.agencyNumber = agencyNumber;
 		this.accountNumber = accountNumber;
 		this.accountType = accountType;
 		this.balance = balance;
-		this.creditLimit = creditLimit;
-		this.interestRate = interestRate;
 	}
 
 	public Long getId() {

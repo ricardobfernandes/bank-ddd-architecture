@@ -14,7 +14,7 @@ public class JpaAccountRepositoryAdapter implements AccountRepository {
 	private final SpringDataAccountRepository repository;
 
 	public JpaAccountRepositoryAdapter(SpringDataAccountRepository repository) {
-	    this.repository = repository;
+		this.repository = repository;
 	}
 
 	@Override
@@ -35,5 +35,10 @@ public class JpaAccountRepositoryAdapter implements AccountRepository {
 	@Override
 	public List<Account> findAll() {
 		return repository.findAll();
+	}
+
+	@Override
+	public List<Account> saveAll(List<Account> accounts) {
+		return repository.saveAll(accounts);
 	}
 }

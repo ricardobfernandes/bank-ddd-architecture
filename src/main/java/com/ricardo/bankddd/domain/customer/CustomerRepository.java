@@ -10,4 +10,6 @@ public interface CustomerRepository {
     Optional<Customer> findById(Long id);
     
     List<Customer> findAll();
+    
+    List<Customer> saveAll(List<Customer> customers);
 }

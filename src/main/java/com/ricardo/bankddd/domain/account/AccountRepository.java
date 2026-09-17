@@ -12,4 +12,6 @@ public interface AccountRepository {
     Optional<Account> findByAgencyNumberAndAccountNumber(Integer agencyNumber, Integer accountNumber);
 
     List<Account> findAll();
+    
+    List<Account> saveAll(List<Account> accounts);
 }

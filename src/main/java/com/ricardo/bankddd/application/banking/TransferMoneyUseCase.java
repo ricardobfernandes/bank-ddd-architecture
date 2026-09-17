@@ -2,6 +2,8 @@ package com.ricardo.bankddd.application.banking;
 
 import java.time.LocalTime;
 
+import org.springframework.stereotype.Service;
+
 import com.ricardo.bankddd.domain.account.Account;
 import com.ricardo.bankddd.domain.account.AccountRepository;
 import com.ricardo.bankddd.domain.account.AccountType;
@@ -9,6 +11,7 @@ import com.ricardo.bankddd.domain.exceptions.InsufficientFundsException;
 import com.ricardo.bankddd.domain.exceptions.InvalidAmountException;
 import com.ricardo.bankddd.domain.exceptions.TransferNotAllowedException;
 
+@Service
 public class TransferMoneyUseCase {
 
 	private final AccountRepository accountRepository;

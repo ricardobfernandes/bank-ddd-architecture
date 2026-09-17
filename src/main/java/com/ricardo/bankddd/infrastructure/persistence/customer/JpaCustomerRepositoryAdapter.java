@@ -31,7 +31,9 @@ public class JpaCustomerRepositoryAdapter implements CustomerRepository{
 	public List<Customer> findAll() {
 		return repository.findAll() ;
 	}
-	
-	
 
+	@Override
+	public List<Customer> saveAll(List<Customer> customers) {
+		return repository.saveAll(customers);
+	}
 }

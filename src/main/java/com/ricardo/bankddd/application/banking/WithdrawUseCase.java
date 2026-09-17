@@ -1,8 +1,11 @@
 package com.ricardo.bankddd.application.banking;
 
+import org.springframework.stereotype.Service;
+
 import com.ricardo.bankddd.domain.account.Account;
 import com.ricardo.bankddd.domain.account.AccountRepository;
 
+@Service
 public class WithdrawUseCase {
 	
     private final AccountRepository accountRepository;

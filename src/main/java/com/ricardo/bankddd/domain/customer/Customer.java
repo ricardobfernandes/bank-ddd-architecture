@@ -38,6 +38,7 @@ public class Customer implements Serializable{
 	private CustomerGender customerGender;
 	
 	@OneToMany(mappedBy = "customer")
+	@JsonIgnore
 	private List<Account> accounts = new ArrayList<>();
 	
 	@Embedded

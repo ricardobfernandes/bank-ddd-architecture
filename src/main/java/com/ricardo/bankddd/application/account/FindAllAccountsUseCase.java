@@ -1,9 +1,13 @@
 package com.ricardo.bankddd.application.account;
 
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.ricardo.bankddd.domain.account.Account;
 import com.ricardo.bankddd.domain.account.AccountRepository;
 
+@Service
 public class FindAllAccountsUseCase {
    
 	private final AccountRepository accountRepository;
