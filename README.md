@@ -585,6 +585,9 @@ class Customer {
     LocalDate dateOfBirth
     String mothersName
     CustomerGender customerGender
+
+    +changeAddress()
+    +changeContactInfo()
 }
 
 class Address {
@@ -611,6 +614,11 @@ class Account {
     Double balance
     Double creditLimit
     Double interestRate
+    
+    +deposit(amount)
+    +withdraw(amount)
+    +addTransaction(type, amount)
+    +getTransactions()
 }
 
 class Transaction {
