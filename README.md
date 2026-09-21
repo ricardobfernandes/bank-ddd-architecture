@@ -62,12 +62,12 @@ com.ricardo.bankddd
 ├── infrastructure
 │   ├── config
 │   └── persistence
-        └── account
-        └── customer
+│       └── account
+│       └── customer
 │
 └── interfaces
-    └── rest
-        └── exceptions
+│   └── rest
+│       └── exceptions
 ```
 
 ---
@@ -571,6 +571,10 @@ and run the generated application from your IDE.
 
 # Class Diagram
 
+## Class Diagram
+
+## Class Diagram
+
 ```mermaid
 classDiagram
 
@@ -599,7 +603,34 @@ class ContactInfo {
     String email
 }
 
-class Account 
+class Account {
+    Long id
+    Integer agencyNumber
+    Integer accountNumber
+    AccountType accountType
+    Double balance
+    Double creditLimit
+    Double interestRate
+}
+
+class Transaction {
+    Long id
+    LocalDateTime dateTime
+    String type
+    Double amount
+}
+
+Customer "1" --> "0..*" Account : owns
+
+Account "1" --> "0..*" Transaction : records
+
+Customer *-- Address : contains
+
+Customer *-- ContactInfo : contains
+
+Account --> Customer : belongs to
+
+Transaction --> Account : belongs to
 ```
 
 ---
