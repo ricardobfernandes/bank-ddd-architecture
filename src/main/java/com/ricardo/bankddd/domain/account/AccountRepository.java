@@ -14,4 +14,6 @@ public interface AccountRepository {
     List<Account> findAll();
     
     List<Account> saveAll(List<Account> accounts);
+    
+    boolean existsByCustomerIdAndAccountType(Long customerId, AccountType accountType);
 }

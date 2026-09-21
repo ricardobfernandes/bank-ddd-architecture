@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.ricardo.bankddd.domain.account.Account;
 import com.ricardo.bankddd.domain.account.AccountRepository;
+import com.ricardo.bankddd.domain.exceptions.AccountNotFoundException;
 
 @Service
 public class DepositUseCase {
@@ -15,7 +16,7 @@ public class DepositUseCase {
     }
 
     public void execute(Long accountId, Double amount) {
-        Account account = accountRepository.findById(accountId).orElseThrow();
+        Account account = accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("Account not found!"));
         account.deposit(amount);
         account.addTransaction("DEPOSIT", amount);
         accountRepository.save(account);

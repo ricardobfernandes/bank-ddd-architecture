@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.ricardo.bankddd.domain.account.Account;
 import com.ricardo.bankddd.domain.account.AccountRepository;
 import com.ricardo.bankddd.domain.account.AccountType;
+import com.ricardo.bankddd.domain.exceptions.AccountNotFoundException;
 import com.ricardo.bankddd.domain.exceptions.InsufficientFundsException;
 import com.ricardo.bankddd.domain.exceptions.InvalidAmountException;
 import com.ricardo.bankddd.domain.exceptions.TransferNotAllowedException;
@@ -21,7 +22,7 @@ public class TransferMoneyUseCase {
 	}
 
 	public void execute(Long sourceId, Double amount, Integer destinationAgency, Integer destinationAccountNumber) {
-		Account accountSource = accountRepository.findById(sourceId).orElseThrow();
+		Account accountSource = accountRepository.findById(sourceId).orElseThrow(() -> new AccountNotFoundException("Account not found!"));
 		if (amount <= 0) {
 			throw new InvalidAmountException("Transfer amount must be greater than zero.");
 		}
@@ -38,7 +39,7 @@ public class TransferMoneyUseCase {
 				throw new TransferNotAllowedException("Transfers above 1000 are only allowed between 06:00 and 22:00!");
 			}
 		}
-		Account accountDestination = accountRepository.findByAgencyNumberAndAccountNumber(destinationAgency, destinationAccountNumber).orElseThrow();
+		Account accountDestination = accountRepository.findByAgencyNumberAndAccountNumber(destinationAgency, destinationAccountNumber).orElseThrow(() -> new AccountNotFoundException("Account not found!"));
 		accountSource.withdraw(amount);
 		accountSource.addTransaction("TRANSFER_OUT", -amount);
 		accountDestination.deposit(amount);

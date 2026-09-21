@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.ricardo.bankddd.domain.account.Account;
 import com.ricardo.bankddd.domain.account.AccountRepository;
+import com.ricardo.bankddd.domain.exceptions.AccountNotFoundException;
 
 @Service
 public class FindAccountUseCase {
@@ -15,6 +16,6 @@ public class FindAccountUseCase {
     }
 
     public Account execute(Long accountId) {
-        return accountRepository.findById(accountId).orElseThrow();
+        return accountRepository.findById(accountId).orElseThrow(() -> new AccountNotFoundException("Account not found!"));
     }
 }

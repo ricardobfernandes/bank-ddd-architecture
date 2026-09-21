@@ -8,6 +8,8 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ricardo.bankddd.domain.account.Account;
+import com.ricardo.bankddd.domain.exceptions.InvalidAddressException;
+import com.ricardo.bankddd.domain.exceptions.InvalidContactInfoException;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -21,32 +23,32 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_customer")
-public class Customer implements Serializable{
-    private static final long serialVersionUID = 1L;
+public class Customer implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @JsonIgnore
-    private String password;
-    private String fullName;
-    private LocalDate dateOfBirth;
-    private String mothersName;
-    
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@JsonIgnore
+	private String password;
+	private String fullName;
+	private LocalDate dateOfBirth;
+	private String mothersName;
+
 	@Enumerated(EnumType.STRING)
 	private CustomerGender customerGender;
-	
+
 	@OneToMany(mappedBy = "customer")
 	@JsonIgnore
 	private List<Account> accounts = new ArrayList<>();
-	
+
 	@Embedded
 	private Address address;
-	
+
 	@Embedded
 	private ContactInfo contactInfo;
-	
+
 	public Customer() {
 	}
 
@@ -59,8 +61,8 @@ public class Customer implements Serializable{
 		this.dateOfBirth = dateOfBirth;
 		this.mothersName = mothersName;
 		this.customerGender = customerGender;
-		this.address = address;		
-		this.contactInfo = contactInfo;	
+		this.address = address;
+		this.contactInfo = contactInfo;
 	}
 
 	public Long getId() {
@@ -110,19 +112,31 @@ public class Customer implements Serializable{
 	public void setCustomerGender(CustomerGender customerGender) {
 		this.customerGender = customerGender;
 	}
-	
+
 	public List<Account> getAccounts() {
-	    return accounts;
+		return accounts;
 	}
-	
+
 	public void changeAddress(Address newAddress) {
+		if (newAddress.getStreet().isBlank() || newAddress.getNumber().isBlank()
+				|| newAddress.getNeighborhood().isBlank() || newAddress.getCity().isBlank()
+				|| newAddress.getState().isBlank() || newAddress.getZipCode().isBlank()
+				|| newAddress.getCountry().isBlank()) {
+			throw new InvalidAddressException("Address miss information!");
+		}
 		this.address = newAddress;
 	}
-	
+
 	public void changeContactInfo(ContactInfo newContactInfo) {
+		if (newContactInfo.getPhoneNumber().isBlank() || newContactInfo.getPhoneNumber().length() < 10) {
+			throw new InvalidContactInfoException("Phone number must not be empty or blank");
+		}
+		if (newContactInfo.getEmail().isBlank() || !newContactInfo.getEmail().contains("@")) {
+			throw new InvalidContactInfoException("Invalid email address.");
+		}
 		this.contactInfo = newContactInfo;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -138,5 +152,5 @@ public class Customer implements Serializable{
 			return false;
 		Customer other = (Customer) obj;
 		return Objects.equals(id, other.id);
-	} 
+	}
 }

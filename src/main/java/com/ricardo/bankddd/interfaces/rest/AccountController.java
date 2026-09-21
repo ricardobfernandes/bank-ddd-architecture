@@ -14,6 +14,8 @@ import com.ricardo.bankddd.application.account.CreateAccountUseCase;
 import com.ricardo.bankddd.application.account.FindAccountUseCase;
 import com.ricardo.bankddd.application.account.FindAllAccountsUseCase;
 import com.ricardo.bankddd.domain.account.Account;
+import com.ricardo.bankddd.domain.account.AccountType;
+import com.ricardo.bankddd.domain.exceptions.InvalidAccountTypeException;
 import com.ricardo.bankddd.domain.transaction.Transaction;
 
 @RestController
@@ -59,6 +61,9 @@ public class AccountController {
 	@GetMapping("/info/{id}/limit")
 	public ResponseEntity<Double> checkLimit(@PathVariable Long id) {
 		Account account = findAccountUseCase.execute(id);
+		if (account.getAccountType() == AccountType.SAVINGS_ACCOUNT) {
+			throw new InvalidAccountTypeException("Savings account does not have credit limit.");
+		}
 		Double limit = account.getCreditLimit();
 		return ResponseEntity.ok().body(limit);
 	}

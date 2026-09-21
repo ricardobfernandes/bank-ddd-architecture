@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.ricardo.bankddd.domain.customer.Address;
 import com.ricardo.bankddd.domain.customer.Customer;
 import com.ricardo.bankddd.domain.customer.CustomerRepository;
+import com.ricardo.bankddd.domain.exceptions.AccountNotFoundException;
 
 @Service
 public class ChangeAddressUseCase {
@@ -17,7 +18,7 @@ public class ChangeAddressUseCase {
 
 	public void execute(Long customerId, Address newAddress) {
 
-		Customer customer = customerRepository.findById(customerId).orElseThrow();
+		Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new AccountNotFoundException("Account not found!"));
 		customer.changeAddress(newAddress);
 		customerRepository.save(customer);
 	}

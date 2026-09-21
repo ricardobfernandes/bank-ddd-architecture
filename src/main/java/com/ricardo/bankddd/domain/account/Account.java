@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Objects;
 
 import com.ricardo.bankddd.domain.customer.Customer;
+import com.ricardo.bankddd.domain.exceptions.InsufficientFundsException;
+import com.ricardo.bankddd.domain.exceptions.InvalidAccountTypeException;
 import com.ricardo.bankddd.domain.exceptions.InvalidAmountException;
 import com.ricardo.bankddd.domain.transaction.Transaction;
 
@@ -43,8 +45,8 @@ public class Account implements Serializable {
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 
-	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL) // tem que reavaliar
-	private List<Transaction> transactions = new ArrayList<>(); // tem que reavaliar
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	private List<Transaction> transactions = new ArrayList<>();
 
 	public Account() {
 	}
@@ -103,6 +105,9 @@ public class Account implements Serializable {
 	}
 
 	public void setCreditLimit(Double creditLimit) {
+		if (accountType ==  AccountType.SAVINGS_ACCOUNT) {
+			 throw new InvalidAccountTypeException("Savings account does not have credit limit.");
+		}
 		this.creditLimit = creditLimit;
 	}
 
@@ -111,12 +116,21 @@ public class Account implements Serializable {
 	}
 
 	public void setInterestRate(Double interestRate) {
+		if (accountType ==  AccountType.CHECKING_ACCOUNT) {
+			 throw new InvalidAccountTypeException("Checking account does not have interest rate.");
+		}
 		this.interestRate = interestRate;
 	}
 
 	public void withdraw(double amount) {
 		if (amount <= 0) {
 			throw new InvalidAmountException("Withdrawal amount must be greater than zero.");
+		}
+		if (accountType == AccountType.CHECKING_ACCOUNT && amount > this.getBalance() + this.getCreditLimit()) {
+		    throw new InsufficientFundsException("Insufficient funds!");
+		}
+		if (accountType == AccountType.SAVINGS_ACCOUNT && amount > this.getBalance()) {
+		    throw new InsufficientFundsException("Insufficient funds!");
 		}
 		balance -= amount;
 	}

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ricardo.bankddd.domain.account.Account;
 import com.ricardo.bankddd.domain.account.AccountRepository;
+import com.ricardo.bankddd.domain.account.AccountType;
 
 @Repository
 public class JpaAccountRepositoryAdapter implements AccountRepository {
@@ -40,5 +41,10 @@ public class JpaAccountRepositoryAdapter implements AccountRepository {
 	@Override
 	public List<Account> saveAll(List<Account> accounts) {
 		return repository.saveAll(accounts);
+	}
+	
+	@Override
+	public boolean existsByCustomerIdAndAccountType(Long customerId, AccountType accountType) {
+	    return repository.existsByCustomerIdAndAccountType(customerId, accountType);
 	}
 }
